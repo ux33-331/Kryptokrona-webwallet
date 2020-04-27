@@ -41,8 +41,11 @@ global.config = {
 	// 	'9ppu34ocgmeZiv4nS2FyQTFLL5wBFQZkhAfph7wGcnFkc8fkCgTJqxnXuBkaw1v2BrUW7iMwKoQy2HXRXzDkRE76Cz7WXkD'
 	// ]
 
-
-	apiUrl: 'http://wallet.kryptokrona.se/api/', //temporary testing front end
+    apiUrl:typeof window !== 'undefined' && window.location ? window.location.href.substr(0,window.location.href.lastIndexOf('/')+1)+'api/' : 'http://wallet.kryptokrona.se/api/',
+	 trustedDaemonsAddresses:[
+	 	'http://wallet.kryptokrona.se/api/'
+	 ],
+	//apiUrl: 'http://wallet.kryptokrona.se/api/', //temporary testing front end
 	mainnetExplorerUrl: "http://explorer.kryptokrona.com",
     coinUnitPlaces: 2,
     coinDisplayUnitPlaces: 2,
