@@ -11,7 +11,7 @@
 
 		<div class="panel inline" v-if="currentScanBlock+2 < blockchainHeight" >
 			<div class="progress" >
-				<div class="bar" :style="'width:'+((currentScanBlock+1)/blockchainHeight*100 | 0)+'%'" >{{(((currentScanBlock+1)/blockchainHeight*1000 | 0) / 10)}}%</div>
+				<div class="bar" :style="'width:'+((currentScanBlock+1)/blockchainHeight*100 | 0)+'%'" ><h1>{{(((currentScanBlock+1)/blockchainHeight*1000 | 0) / 10)}}%</h1></div>
 				<label>
 					{{ $t("accountPage.synchronizingBlock.text") }} <span class="currentScanBlock" >{{currentScanBlock+1}}</span>/<span class="blockchainHeight" >{{blockchainHeight}}</span>
 				</label>
@@ -21,20 +21,15 @@
 		<div class="panel">
 			<div class="body" >
 				<div class="header-title" >{{ $t("accountPage.balanceBlock.title") }}</div>
-				<div class="content" >
-					<span class="walletAmount" >{{ $n(walletAmount / currencyDivider) }} MSR</span> 
-					<span class="btcValue" v-if="geckoCurrentPrice.market_data != null">
-						{{ (geckoCurrentPrice.market_data.current_price.btc)* $n(walletAmount / currencyDivider) | satoshis }}
-					</span>
-					<span class="USDValue" v-if="geckoCurrentPrice.market_data != null">
-						<span v-for="(value, key) in geckoCurrentPrice.market_data.current_price" v-if="key == currency">						
-							{{ (value) * $n(walletAmount / currencyDivider) | fiat(currency) }}
-						</span>
-					</span>
-					<tempate class="amount unlocked" v-if="unlockedWalletAmount !== walletAmount" >
-						<br/><span class="walletAmount" >{{ $t("accountPage.balanceBlock.unlocked") }}: {{ $n(unlockedWalletAmount / currencyDivider) }}</span> MSR
-					</tempate>
-				</div>
+                <div class="content">
+                    <span class="walletAmount">{{ walletAmount | formatMoney }}</span> XKR
+                    <tempate class="amount unlocked" v-if="unlockedWalletAmount !== walletAmount">
+                        <br /><span class="walletAmount">{{ $t("accountPage.balanceBlock.unlocked") }}: {{ unlockedWalletAmount | formatMoney }}</span> XKR
+                    </tempate>
+                    <tempate class="" v-if="fusionCount > 0">
+                        <br /><span class="walletAmount">{{ fusionCount }} {{ $t("accountPage.balanceBlock.fusions") }}</span>
+                    </tempate>
+                </div>
 			</div>
 		</div>
 
@@ -45,7 +40,7 @@
 
 					<div class="transactions" >
 						<table>
-							<template v-for="transaction of transactions" v-if="transaction.isFullyChecked()">
+							<template v-for="transaction of transactions" v-if="transaction.isFullyChecked() && !transaction.isFusionTx()">
 								<tr class="transaction" :class="(transaction.blockHeight === 0 ? 'pending' : '')">
 									<td class="direction" >
 										<i v-if="transaction.ins.length == 0" class="fa fa-level-down" aria-hidden="true"></i>
@@ -53,7 +48,7 @@
 									</td><!--LEfT-->
 									<td class="timestamp" v-if="transaction.blockHeight > 0">{{$d(new Date(transaction.timestamp*1000), 'long')}}</td>
 									<td class="timestamp" v-else="">{{ $t("accountPage.historyBlock.pendingTxStatus") }}...</td>
-									<td :class="'amount '+(transaction.getAmount() > 0 ? 'more' : 'less')" >{{ $n(transaction.getAmount() / currencyDivider) }}</td>
+                                    <td :class="'amount '+(transaction.getAmount() > 0 ? 'more' : 'less')">{{ transaction.getAmount() | formatMoney }}</td>
 									<td class="moreInfo">
 										<i class="fa fa-search" aria-hidden="true" @click="moreInfoOnTx(transaction)"></i>
 									</td>
@@ -72,7 +67,7 @@
 										</template>
 									</span><br>
 									<div class="actions tc" >
-										<a href="#receive" class="btn">{{ $t("accountPage.historyBlock.getMSRAddress") }}</a>
+										<a href="#receive" class="btn">{{ $t("accountPage.historyBlock.getXKRAddress") }}</a>
 									</div>
 								</td>
 							</tr>

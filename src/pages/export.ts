@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2018, Gnock
  * Copyright (c) 2018, The Masari Project
+ * Copyright (c) 2018, The Plenteum Project
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  *
@@ -127,7 +128,8 @@ class ExportView extends DestructableView {
 	fileExport() {
 		this.askUserPassword().then(function (params: { wallet: Wallet, password: string } | null) {
 			if (params !== null && params.wallet !== null) {
-				let blob = new Blob([JSON.stringify(WalletRepository.getEncrypted(params.wallet, params.password))], {type: "application/json"});
+				let exported = WalletRepository.getEncrypted(params.wallet, params.password);
+				let blob = new Blob([JSON.stringify(exported)], {type: "application/json"});
 				saveAs(blob, "wallet.json");
 			}
 		});

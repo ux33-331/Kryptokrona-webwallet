@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2018, Gnock
  * Copyright (c) 2018, The Masari Project
+ * Copyright (c) 2018, The Plenteum Project
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  *
@@ -19,11 +20,6 @@ import {VueRequireFilter, VueVar} from "../lib/numbersLab/VueAnnotate";
 import {DestructableView} from "../lib/numbersLab/DestructableView";
 import {Wallet} from "../model/Wallet";
 import {AppState} from "../model/AppState";
-
-let wallet : Wallet = DependencyInjectorInstance().getInstance(Wallet.name,'default', false);
-if(wallet !== null){
-	window.location.href = '#account';
-}
 
 class IndexView extends DestructableView{
 	@VueVar(false) hasLocalWallet !: boolean;
