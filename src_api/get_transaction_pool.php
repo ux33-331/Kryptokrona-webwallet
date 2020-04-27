@@ -15,5 +15,5 @@
  */
 
 include 'config.php';
-transmitRequest('getwalletsyncdata');
+transmitRequest('get_transaction_pool');
 

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2018, Gnock
  * Copyright (c) 2018, The Masari Project
- * Copyright (c) 2018, The Plenteum Project
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  *
@@ -21,6 +20,7 @@ import {Constants} from "../model/Constants";
 import {VueVar, VueWatched} from "../lib/numbersLab/VueAnnotate";
 import {CoinUri} from "../model/CoinUri";
 import {Nfc} from "../model/Nfc";
+import {Cn} from "../model/Cn";
 
 let wallet : Wallet = DependencyInjectorInstance().getInstance(Wallet.name,'default', false);
 
@@ -92,7 +92,7 @@ class AccountView extends DestructableView{
 		if(this.paymentId !== '' && this.paymentId.length <= 8) {
 			let paymentId8 = ('00000000'+this.stringToHex(this.paymentId)).slice(-16);
 			console.log(paymentId8+'==>'+this.stringToHex(this.paymentId));
-			this.address = cnUtil.get_account_integrated_address(wallet.getPublicAddress(), paymentId8);
+			this.address = Cn.get_account_integrated_address(wallet.getPublicAddress(), paymentId8);
 		}else
 			this.address = wallet.getPublicAddress();
 	}
@@ -100,15 +100,12 @@ class AccountView extends DestructableView{
 	generateQrCode(){
 		let el = kjua({
 			text: this.getAddressEncoded(),
-			image:document.getElementById('pleQrCodeLogo'),
+			image:document.getElementById('masariQrCodeLogo'),
 			size:300,
 			mode:'image',
 			mSize: 10,
 			mPosX: 50,
 			mPosY: 50,
-			fill: '#fff',
-            back: '#4a4a4a',
-            crisp: true,
 		});
 		$('#qrCodeContainer').html(el);
 	}
@@ -165,7 +162,7 @@ class AccountView extends DestructableView{
 	shareWithNfc(){
 		swal({
 			title: 'Sharing your payment address',
-			html: 'Bring this device closer to the other device to share your public information',
+			html: 'Bring closer the other device to share your public information',
 			onOpen: () => {
 				swal.showLoading();
 			},
@@ -193,6 +190,7 @@ class AccountView extends DestructableView{
 	destruct(): Promise<void> {
 		this.nfc.unshareNdef();
 		this.nfc.cancelWriteNdef();
+		swal.close();
 		return super.destruct();
 	}
 }

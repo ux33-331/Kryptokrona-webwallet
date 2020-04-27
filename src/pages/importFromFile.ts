@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2018, Gnock
  * Copyright (c) 2018, The Masari Project
- * Copyright (c) 2018, The Plenteum Project
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  *
@@ -19,17 +18,13 @@ import {DestructableView} from "../lib/numbersLab/DestructableView";
 import {VueVar, VueWatched} from "../lib/numbersLab/VueAnnotate";
 import {AppState} from "../model/AppState";
 import {Password} from "../model/Password";
-import {Wallet} from "../model/Wallet";
-import {KeysRepository} from "../model/KeysRepository";
 import {BlockchainExplorerProvider} from "../providers/BlockchainExplorerProvider";
-import {BlockchainExplorerRpc2} from "../model/blockchain/BlockchainExplorerRpc2";
-import {Mnemonic} from "../model/Mnemonic";
-import {MnemonicLang} from "../model/MnemonicLang";
 import {WalletRepository} from "../model/WalletRepository";
+import {BlockchainExplorer} from "../model/blockchain/BlockchainExplorer";
 
 AppState.enableLeftMenu();
 
-let blockchainExplorer : BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
+let blockchainExplorer : BlockchainExplorer = BlockchainExplorerProvider.getInstance();
 
 class ImportView extends DestructableView{
 	@VueVar('') password !: string;
@@ -68,7 +63,7 @@ class ImportView extends DestructableView{
 				let fileReader = new FileReader();
 				fileReader.onload = function () {
 					try {
-						self.rawFile = JSON.parse(fileReader.result);
+						self.rawFile = JSON.parse(<any>fileReader.result);
 						self.invalidRawFile = false;
 					}catch (e) {
 						self.invalidRawFile = true;
@@ -85,7 +80,7 @@ class ImportView extends DestructableView{
 		let self = this;
 		blockchainExplorer.getHeight().then(function(currentHeight){
 			setTimeout(function(){
-				let newWallet = WalletRepository.getWithPassword(self.rawFile,self.password);
+				let newWallet = WalletRepository.decodeWithPassword(self.rawFile,self.password);
 				if(newWallet !== null) {
 					newWallet.recalculateIfNotViewOnly();
 					AppState.openWallet(newWallet, self.password);

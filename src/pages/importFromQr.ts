@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2018, Gnock
  * Copyright (c) 2018, The Masari Project
- * Copyright (c) 2018, The Plenteum Project
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  *
@@ -22,14 +21,15 @@ import {Password} from "../model/Password";
 import {Wallet} from "../model/Wallet";
 import {KeysRepository} from "../model/KeysRepository";
 import {BlockchainExplorerProvider} from "../providers/BlockchainExplorerProvider";
-import {BlockchainExplorerRpc2} from "../model/blockchain/BlockchainExplorerRpc2";
 import {QRReader} from "../model/QRReader";
 import {CoinUri} from "../model/CoinUri";
 import {Mnemonic} from "../model/Mnemonic";
+import {Cn, CnUtils} from "../model/Cn";
+import {BlockchainExplorer} from "../model/blockchain/BlockchainExplorer";
 
 AppState.enableLeftMenu();
 
-let blockchainExplorer : BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
+let blockchainExplorer : BlockchainExplorer = BlockchainExplorerProvider.getInstance();
 
 class ImportView extends DestructableView{
 	@VueVar('') password !: string;
@@ -71,7 +71,7 @@ class ImportView extends DestructableView{
 				if(detectedMnemonicLang !== null){
 					let mnemonic_decoded = Mnemonic.mn_decode(self.mnemonicSeed, detectedMnemonicLang);
 					if(mnemonic_decoded !== null) {
-						let keys = cnUtil.create_address(mnemonic_decoded);
+						let keys = Cn.create_address(mnemonic_decoded);
 						newWallet.keys = KeysRepository.fromPriv(keys.spend.sec, keys.view.sec);
 					}else{
 						swal({
@@ -94,12 +94,12 @@ class ImportView extends DestructableView{
 			}else if(self.privateSpendKey !== null){
 				let viewkey = self.privateViewKey !== null ? self.privateViewKey : '';
 				if(viewkey === ''){
-					viewkey = cnUtil.generate_keys(cnUtil.cn_fast_hash(self.privateSpendKey)).sec;
+					viewkey = Cn.generate_keys(CnUtils.cn_fast_hash(self.privateSpendKey)).sec;
 				}
 				newWallet.keys = KeysRepository.fromPriv(self.privateSpendKey, viewkey);
 
 			}else if(self.privateSpendKey === null && self.privateViewKey !== null && self.publicAddress !== null){
-				let decodedPublic = cnUtil.decode_address(self.publicAddress);
+				let decodedPublic = Cn.decode_address(self.publicAddress);
 				newWallet.keys = {
 					priv:{
 						spend:'',
@@ -230,6 +230,10 @@ class ImportView extends DestructableView{
 		this.forceInsecurePassword = true;
 	}
 
+	destruct(): Promise<void> {
+		this.stopScan();
+		return super.destruct();
+	}
 }
 
 new ImportView('#app');

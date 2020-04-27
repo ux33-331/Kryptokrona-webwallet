@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2018, Gnock
  * Copyright (c) 2018, The Masari Project
- * Copyright (c) 2018, The Plenteum Project
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
  *
@@ -22,13 +21,13 @@ import {Password} from "../model/Password";
 import {Wallet} from "../model/Wallet";
 import {KeysRepository} from "../model/KeysRepository";
 import {BlockchainExplorerProvider} from "../providers/BlockchainExplorerProvider";
-import {BlockchainExplorerRpc2} from "../model/blockchain/BlockchainExplorerRpc2";
 import {Mnemonic} from "../model/Mnemonic";
-import {MnemonicLang} from "../model/MnemonicLang";
+import {Cn} from "../model/Cn";
+import {BlockchainExplorer} from "../model/blockchain/BlockchainExplorer";
 
 AppState.enableLeftMenu();
 
-let blockchainExplorer : BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
+let blockchainExplorer : BlockchainExplorer = BlockchainExplorerProvider.getInstance();
 
 class ImportView extends DestructableView{
 	@VueVar('') password !: string;
@@ -93,7 +92,7 @@ class ImportView extends DestructableView{
 
 			let mnemonic_decoded = Mnemonic.mn_decode(mnemonic, current_lang);
 			if(mnemonic_decoded !== null) {
-				let keys = cnUtil.create_address(mnemonic_decoded);
+				let keys = Cn.create_address(mnemonic_decoded);
 
 				let newWallet = new Wallet();
 				newWallet.keys = KeysRepository.fromPriv(keys.spend.sec, keys.view.sec);
