@@ -22,7 +22,7 @@
 			<div class="body" >
 				<div class="header-title" >{{ $t("accountPage.balanceBlock.title") }}</div>
 				<div class="content" >
-					<span class="walletAmount" >{{ $n(walletAmount / currencyDivider) }} MSR</span> 
+					<span class="walletAmount" >{{ $n(walletAmount / currencyDivider) }} XKR</span> 
 					<span class="btcValue" v-if="geckoCurrentPrice.market_data != null">
 						{{ (geckoCurrentPrice.market_data.current_price.btc)* $n(walletAmount / currencyDivider) | satoshis }}
 					</span>
