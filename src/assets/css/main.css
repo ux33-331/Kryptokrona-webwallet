@@ -88,8 +88,6 @@ body.transparent {
 	display: none !important;
 }
 
-.hideOnNative {}
-
 body.native .hideOnNative {
 	display: none !important;
 }
@@ -397,7 +395,6 @@ body.transparent #copyright {
 	width: 100%;
 }
 
-.importKeys {}
 
 /*
 .sendTab{
@@ -579,7 +576,6 @@ body.native .indexTab .mainBlock {
 	}
 }
 
-.indexTab .mainBlock .step:first-child {}
 
 .indexTab .mainBlock .headline {
 	margin-top: 20vh;
