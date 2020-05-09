@@ -5,7 +5,7 @@ global.config = {
 	 	'http://wallet.kryptokrona.se/api/'
 	 ],
 	//apiUrl: 'http://wallet.kryptokrona.se/api/', //temporary testing front end
-	mainnetExplorerUrl: "http://explorer.kryptokrona.com",
+	mainnetExplorerUrl: "https://explorer.kryptokrona.com",
     coinUnitPlaces: 2,
     coinDisplayUnitPlaces: 2,
 	txMinConfirms: 60,         
@@ -25,6 +25,5 @@ global.config = {
 	coinName: 'kryptokrona',
 	coinUriPrefix: 'kryptokrona:',
 	avgBlockTime: 90,
-	maxBlockNumber: 500000000,
-	]
+	maxBlockNumber: 500000000
 };
